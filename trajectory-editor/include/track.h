@@ -16,8 +16,7 @@ public:
 
     TrajectoryTrack();
 
-    TrajectoryTrack(const osg::Vec3 &begin_point,
-                    const osg::Vec3 &end_point,
+    TrajectoryTrack(const zds_track_data_t &zds_track_data,
                     const float railway_coord = 0.0);
 
     ~TrajectoryTrack();

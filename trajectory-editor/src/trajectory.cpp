@@ -31,7 +31,7 @@ Trajectory::~Trajectory()
 //------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------
-bool Trajectory::load(const QString &path) const
+bool Trajectory::load(const QString &path)
 {
     return load(path.toStdString());
 }

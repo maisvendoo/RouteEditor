@@ -21,7 +21,7 @@ public:
 
     ~Trajectory();
 
-    bool load(const QString &path) const;
+    bool load(const QString &path);
 
     bool save(const QString &path) const;
 
