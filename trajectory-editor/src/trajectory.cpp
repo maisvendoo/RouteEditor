@@ -1,4 +1,7 @@
 #include    "trajectory.h"
+#include    "string-funcs.h"
+
+#include    <sstream>
 
 //------------------------------------------------------------------------------
 //
@@ -82,7 +85,7 @@ osg::Vec3 Trajectory::getPosition(float railway_coord,
 //------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------
-bool Trajectory::load(const std::string &path) const
+bool Trajectory::load(const std::string &path)
 {
     if (path.empty())
         return false;
@@ -98,9 +101,48 @@ bool Trajectory::load(const std::string &path) const
 //------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------
-bool Trajectory::load(std::ifstream &stream) const
+bool Trajectory::load(std::ifstream &stream)
 {
-    return false;
+    zds_track_data_t zds_track;
+
+    while (!stream.eof())
+    {
+        std::string line = getLine(stream);
+
+        std::istringstream ss(line);
+
+        ss >> zds_track.begin_point.x()
+           >> zds_track.begin_point.y()
+           >> zds_track.begin_point.z()
+           >> zds_track.end_point.x()
+           >> zds_track.end_point.y()
+           >> zds_track.end_point.z()
+           >> zds_track.prev_uid
+           >> zds_track.next_uid
+           >> zds_track.arrows
+           >> zds_track.voltage
+           >> zds_track.ordinate;
+
+        TrajectoryTrack *track = new TrajectoryTrack(zds_track);
+
+        tracks.push_back(track);
+    }
+
+    return true;
+}
+
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
+std::string Trajectory::getLine(std::istream &stream) const
+{
+    std::string line = "";
+    std::getline(stream, line);
+    std::string tmp = delete_symbol(line, '\r');
+    tmp = delete_symbol(tmp, ';');
+    std::replace(tmp.begin(), tmp.end(), ',', ' ');
+
+    return tmp;
 }
 
 //------------------------------------------------------------------------------

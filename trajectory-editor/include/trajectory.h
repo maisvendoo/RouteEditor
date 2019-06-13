@@ -37,9 +37,11 @@ private:
 
     std::vector<TrajectoryTrack *>  tracks;
 
-    bool load(const std::string &path) const;
+    bool load(const std::string &path);
 
-    bool load(std::ifstream &stream) const;
+    bool load(std::ifstream &stream);
+
+    std::string getLine(std::istream &stream) const;
 
     bool save(const std::string &path) const;
 
