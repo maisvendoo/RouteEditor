@@ -87,6 +87,19 @@ bool Trajectory::load(const std::string &path) const
     if (path.empty())
         return false;
 
+    std::ifstream stream(path.c_str(), std::ios::in);
+
+    if (!stream)
+        return false;
+
+    return load(stream);
+}
+
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
+bool Trajectory::load(std::ifstream &stream) const
+{
     return false;
 }
 
@@ -98,6 +111,19 @@ bool Trajectory::save(const std::string &path) const
     if (path.empty())
         return false;
 
+    std::ofstream stream(path.c_str(), std::ios::out);
+
+    if (!stream)
+        return false;
+
+    return save(stream);
+}
+
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
+bool Trajectory::save(std::ofstream &stream) const
+{
     return false;
 }
 

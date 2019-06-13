@@ -4,6 +4,7 @@
 #include    <QString>
 
 #include    <vector>
+#include    <fstream>
 
 #include    "track.h"
 
@@ -38,7 +39,11 @@ private:
 
     bool load(const std::string &path) const;
 
+    bool load(std::ifstream &stream) const;
+
     bool save(const std::string &path) const;
+
+    bool save(std::ofstream &stream) const;
 
     TrajectoryTrack *findTrack(float railway_coord);
 
