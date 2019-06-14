@@ -36,6 +36,7 @@ private:
     QString     name;
 
     std::vector<TrajectoryTrack *>  tracks;
+    std::vector<osg::Vec3 *>        nodes;
 
     bool load(const std::string &path);
 

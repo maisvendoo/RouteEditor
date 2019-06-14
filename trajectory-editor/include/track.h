@@ -29,11 +29,18 @@ public:
 
     float getRailwayCoord() const;
 
+    float getLength() const;
+
     std::string serialize() const;
+
+    osg::Vec3f *getBeginPointPtr();
+
+    osg::Vec3 *getEndPointPtr();
 
 private:
 
     float       railway_coord;
+    int         uid;
 
     int         ordinate;
     int         voltage;

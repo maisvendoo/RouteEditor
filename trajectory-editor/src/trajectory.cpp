@@ -25,7 +25,16 @@ Trajectory::Trajectory(const std::vector<TrajectoryTrack *> &tracks)
 //------------------------------------------------------------------------------
 Trajectory::~Trajectory()
 {
+    nodes.clear();
 
+    for (auto it = tracks.begin(); it != tracks.end(); ++it)
+    {
+        TrajectoryTrack *track = *it;
+        delete track;
+        track = Q_NULLPTR;
+    }
+
+    tracks.clear();
 }
 
 //------------------------------------------------------------------------------
@@ -104,6 +113,7 @@ bool Trajectory::load(const std::string &path)
 bool Trajectory::load(std::ifstream &stream)
 {
     zds_track_data_t zds_track;
+    std::vector<zds_track_data_t> tmp_tracks;
 
     while (!stream.eof())
     {
@@ -121,12 +131,34 @@ bool Trajectory::load(std::ifstream &stream)
            >> zds_track.next_uid
            >> zds_track.arrows
            >> zds_track.voltage
-           >> zds_track.ordinate;
+           >> zds_track.ordinate;        
 
-        TrajectoryTrack *track = new TrajectoryTrack(zds_track);
+        tmp_tracks.push_back(zds_track);
+    }
+
+    if (tmp_tracks.empty())
+        return false;
+
+    float railway_coord = 0.0f;
+    auto it = tmp_tracks.begin();
+
+    for (; (*it).next_uid != -2; ++it)
+    {
+        zds_track_data_t cur_track = *it;
+        zds_track_data_t next_track = tmp_tracks.at(static_cast<size_t>(cur_track.next_uid - 1));
+        cur_track.end_point = next_track.begin_point;
+
+        TrajectoryTrack *track = new TrajectoryTrack(cur_track, railway_coord);
+        railway_coord += track->getLength();
 
         tracks.push_back(track);
+        nodes.push_back(track->getBeginPointPtr());
     }
+
+    TrajectoryTrack *track = new TrajectoryTrack(*it, railway_coord);
+    tracks.push_back(track);
+    nodes.push_back(track->getBeginPointPtr());
+    nodes.push_back(track->getEndPointPtr());
 
     return true;
 }
@@ -166,7 +198,15 @@ bool Trajectory::save(const std::string &path) const
 //------------------------------------------------------------------------------
 bool Trajectory::save(std::ofstream &stream) const
 {
-    return false;
+    if (tracks.empty())
+        return false;
+
+    for (auto it = tracks.begin(); it != tracks.end(); ++it)
+    {
+        stream << (*it)->serialize() << std::endl;
+    }
+
+    return true;
 }
 
 //------------------------------------------------------------------------------

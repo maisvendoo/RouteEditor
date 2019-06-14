@@ -7,6 +7,7 @@
 //------------------------------------------------------------------------------
 TrajectoryTrack::TrajectoryTrack()
     : railway_coord(0.0)
+    , uid(0)
     , ordinate(0)
     , voltage(0)
     , arrows("")
@@ -20,6 +21,21 @@ TrajectoryTrack::TrajectoryTrack()
 
 {
 
+}
+
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
+float arg(float cos_x, float sin_x)
+{
+    float angle = 0;
+
+    if (sin_x >= 0.0f)
+        angle = acosf(cos_x);
+    else
+        angle = -acosf(cos_x);
+
+    return angle;
 }
 
 //------------------------------------------------------------------------------
@@ -43,6 +59,11 @@ TrajectoryTrack::TrajectoryTrack(const zds_track_data_t &zds_track_data,
     basis.front = len * (1 / length);
     osg::Vec3 travers = basis.front ^ basis.up;
     basis.right = travers * (1 / travers.length());
+
+    float yaw = arg(basis.front.y(), basis.front.x());
+    float pitch = asinf(basis.front.z());
+
+    attitude = osg::Vec3(pitch, 0.0, yaw);
 }
 
 //------------------------------------------------------------------------------
@@ -95,6 +116,14 @@ float TrajectoryTrack::getRailwayCoord() const
 //------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------
+float TrajectoryTrack::getLength() const
+{
+    return length;
+}
+
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
 std::string TrajectoryTrack::serialize() const
 {
     std::string line;
@@ -114,4 +143,14 @@ std::string TrajectoryTrack::serialize() const
        << ordinate;
 
     return line;
+}
+
+osg::Vec3 *TrajectoryTrack::getEndPointPtr()
+{
+    return &end_point;
+}
+
+osg::Vec3 *TrajectoryTrack::getBeginPointPtr()
+{
+    return &begin_point;
 }
