@@ -17,7 +17,8 @@ public:
     TrajectoryTrack();
 
     TrajectoryTrack(const zds_track_data_t &zds_track_data,
-                    const float railway_coord = 0.0);
+                    const float railway_coord = 0.0,
+                    const int uid = 1);
 
     ~TrajectoryTrack();
 
@@ -36,6 +37,12 @@ public:
     osg::Vec3f *getBeginPointPtr();
 
     osg::Vec3 *getEndPointPtr();
+
+    int getUID() const;
+
+    void setPrevUID(const int prev_uid);
+
+    void setNextUID(const int next_uid);
 
 private:
 

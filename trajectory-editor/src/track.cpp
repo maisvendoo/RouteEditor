@@ -42,7 +42,8 @@ float arg(float cos_x, float sin_x)
 //
 //------------------------------------------------------------------------------
 TrajectoryTrack::TrajectoryTrack(const zds_track_data_t &zds_track_data,
-                                 const float railway_coord)
+                                 const float railway_coord,
+                                 const int uid)
 {
     this->railway_coord = railway_coord;
     this->begin_point = zds_track_data.begin_point;
@@ -52,6 +53,7 @@ TrajectoryTrack::TrajectoryTrack(const zds_track_data_t &zds_track_data,
     this->arrows = zds_track_data.arrows;
     this->prev_uid = zds_track_data.prev_uid;
     this->next_uid = zds_track_data.next_uid;
+    this->uid = uid;
 
     osg::Vec3 len = end_point - begin_point;
     length = len.length();
@@ -145,11 +147,41 @@ std::string TrajectoryTrack::serialize() const
     return line;
 }
 
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
 osg::Vec3 *TrajectoryTrack::getEndPointPtr()
 {
     return &end_point;
 }
 
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
+int TrajectoryTrack::getUID() const
+{
+    return uid;
+}
+
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
+void TrajectoryTrack::setPrevUID(const int prev_uid)
+{
+    this->prev_uid = prev_uid;
+}
+
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
+void TrajectoryTrack::setNextUID(const int next_uid)
+{
+    this->next_uid = next_uid;
+}
+
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
 osg::Vec3 *TrajectoryTrack::getBeginPointPtr()
 {
     return &begin_point;

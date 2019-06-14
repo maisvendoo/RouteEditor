@@ -148,7 +148,7 @@ bool Trajectory::load(std::ifstream &stream)
         zds_track_data_t next_track = tmp_tracks.at(static_cast<size_t>(cur_track.next_uid - 1));
         cur_track.end_point = next_track.begin_point;
 
-        TrajectoryTrack *track = new TrajectoryTrack(cur_track, railway_coord);
+        TrajectoryTrack *track = new TrajectoryTrack(cur_track, railway_coord, cur_track.next_uid - 1);
         railway_coord += track->getLength();
 
         tracks.push_back(track);
